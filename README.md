@@ -152,16 +152,25 @@ All detections are saved in a structured CSV file (`detection_log.csv`).
 ## 📂 Repository Structure
 
 ```
-real-time-road-anomaly-raspberrypi/
+road-anomaly-detection-ai/
 │
 ├── README.md                        # Project documentation
-├── main.py                          # Main detection script
-├── best.onnx                        # YOLO11n ONNX model
-├── yolo11n.pt                       # YOLO11n PyTorch model
+├── requirements.txt                 # Python dependencies
+├── main.py                          # Main dual-detector script (ONNX + PT)
+├── optimized_main.py                # Optimized version with multithreaded capture
+├── ultimate_pipeline.py             # Ultra-optimized single-model pipeline
+├── best.onnx                        # YOLO11n ONNX model (pothole detection)
+├── yolo11n.pt                       # YOLO11n PyTorch model (obstacle detection)
 │
-├── demo1.mp4                        # Demo output video 1
-├── demo2.mp4                        # Demo output video 2
-├── demo3.mp4                        # Demo output video 3
+├── docs/                            # Detailed documentation
+│   ├── INSTALLATION.md              # Step-by-step installation guide
+│   ├── USAGE.md                     # Usage guide for all scripts
+│   ├── API.md                       # Code/API reference
+│   └── CONFIGURATION.md             # Configuration options
+│
+├── demo1.mp4                        # Demo input video 1 (rural road)
+├── demo2.mp4                        # Demo input video 2 (highway)
+├── demo3.mp4                        # Demo input video 3 (animals & vehicles)
 │
 ├── demo1.csv                        # Detection results for video 1
 ├── demo2.csv                        # Detection results for video 2
@@ -172,33 +181,53 @@ real-time-road-anomaly-raspberrypi/
 
 ## 💡 Code Structure
 
-### 📝 [View Full Source Code - main.py](main.py)
+Three scripts are included, each building on the previous:
 
-Click above to view the complete implementation! The code includes:
+### 📝 [main.py](main.py) — Dual-Model Detector
 
-#### **RoadAnomalyDetector Class**
+The primary script using both ONNX and PyTorch models:
 
 ```python
-class RoadAnomalyDetector:
-    """Real-time road anomaly detection using YOLO11n ONNX model"""
+class DualDetector:
+    """Dual detection: Potholes (ONNX) + Obstacles (YOLO11 PT)"""
 ```
 
 **Key Methods:**
 
-1. **`__init__()`** - Initialize ONNX Runtime session and model parameters
-2. **`preprocess()`** - Resize, normalize, and format input images
-3. **`postprocess()`** - Parse YOLO outputs and apply NMS
-4. **`estimate_pothole_diameter()`** - Calculate pothole size in pixels
-5. **`classify_vehicle_motion()`** - Determine if vehicle is moving/stationary
-6. **`log_detection()`** - Record detections to internal log
-7. **`save_log_to_csv()`** - Export detection log to CSV
-8. **`draw_detections()`** - Annotate frames with bounding boxes
-9. **`process_video()`** - Main video processing pipeline
+1. **`__init__()`** - Initialize ONNX Runtime and YOLO11 PT sessions
+2. **`preprocess_pothole()`** - Resize, normalize, and format input images
+3. **`postprocess_pothole()`** - Parse YOLO outputs and apply NMS
+4. **`calculate_pothole_diameter()`** - Estimate pothole size in pixels
+5. **`track_and_calculate_motion()`** - Multi-frame IoU vehicle tracking
+6. **`detect_obstacles()`** - Run YOLO11 PT for obstacle detection
+7. **`log_detections_to_csv()`** - Record detections to internal log
+8. **`save_csv()`** - Export detection log to CSV
+9. **`draw_detections()`** - Annotate frames with bounding boxes and FPS
+10. **`process_video()`** - Main video processing pipeline
+
+### 📝 [optimized_main.py](optimized_main.py) — Multithreaded Version
+
+Adds a `VideoStream` class with a dedicated reader thread for smoother frame capture:
+
+```python
+class VideoStream:
+    """Threaded video capture to decouple I/O from inference"""
+```
+
+### 📝 [ultimate_pipeline.py](ultimate_pipeline.py) — Ultra-Optimized Pipeline
+
+Single ONNX model pipeline with image enhancement tricks:
+
+- Pre-sharpening before resize (TRICK 1)
+- `INTER_AREA` downscaling for pixel preservation (TRICK 2)
+- Letterbox padding to preserve aspect ratio (TRICK 3)
+- Temporal blending for zero-cost denoising (TRICK 6)
+- Adaptive CLAHE for shadow/glare correction (TRICK 7)
 
 #### **Detection Pipeline**
 
-```python
-Frame Input → Preprocess → ONNX Inference → Postprocess → 
+```
+Frame Input → Preprocess → ONNX Inference → Postprocess →
 Feature Extraction → Logging → Annotation → Output
 ```
 
@@ -209,8 +238,8 @@ Feature Extraction → Logging → Annotation → Output
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/gayatri719/real-time-road-anomaly-raspberrypi.git
-cd real-time-road-anomaly-raspberrypi
+git clone https://github.com/Vikaash-dev/road-anomaly-detection-ai.git
+cd road-anomaly-detection-ai
 ```
 
 ### 2️⃣ Install Dependencies
@@ -227,9 +256,25 @@ pip install -r requirements.txt
 
 ### 3️⃣ Run the Application
 
+**Dual-model detection (recommended):**
+
 ```bash
-python main.py
+python main.py --pothole-model best.onnx --obstacle-model yolo11n.pt --video demo1.mp4 --output output.mp4 --csv detections.csv
 ```
+
+**Optimized multithreaded version:**
+
+```bash
+python optimized_main.py --pothole-model best.onnx --obstacle-model yolo11n.pt --video demo1.mp4 --output output.mp4 --csv detections.csv
+```
+
+**Ultra-optimized single-model pipeline:**
+
+```bash
+python ultimate_pipeline.py --pothole-model best.onnx --video demo1.mp4 --output output_ultimate.mp4
+```
+
+See [docs/USAGE.md](docs/USAGE.md) for the full list of command-line arguments and examples.
 
 ### 4️⃣ Output
 
@@ -318,7 +363,7 @@ Three demonstration videos showing real-time detection, FPS display, and CSV log
 
 ### 🎬 Demo Video 1 - Rural Road with Potholes
 
-[▶️ **Click here to watch demo1.mp4**](https://github.com/gayatri719/real-time-road-anomaly-raspberrypi/blob/main/demo1.mp4)
+[▶️ **Click here to watch demo1.mp4**](https://github.com/Vikaash-dev/road-anomaly-detection-ai/blob/main/demo1.mp4)
 
 Rural road scenario demonstrating pothole detection capabilities.
 
