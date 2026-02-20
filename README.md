@@ -248,11 +248,13 @@ cd road-anomaly-detection-ai
 pip install opencv-python numpy pandas onnxruntime
 ```
 
-Or use the requirements file:
+Or use the requirements file (included in this repo):
 
 ```bash
 pip install -r requirements.txt
 ```
+
+See [docs/INSTALLATION.md](docs/INSTALLATION.md) for Raspberry Pi–specific setup steps.
 
 ### 3️⃣ Run the Application
 
@@ -306,6 +308,19 @@ The system will:
 - ⚡ **ONNX Runtime** used for efficient ARM CPU execution
 - 🎚️ Confidence threshold tuning to reduce false positives
 - 📐 Optimized input resolution for balanced speed and accuracy
+
+---
+
+## 📚 Documentation
+
+Full documentation is available in the [`docs/`](docs/) directory:
+
+| Document | Description |
+|----------|-------------|
+| [docs/INSTALLATION.md](docs/INSTALLATION.md) | Step-by-step installation guide (including Raspberry Pi 4) |
+| [docs/USAGE.md](docs/USAGE.md) | Usage guide and CLI reference for all three scripts |
+| [docs/API.md](docs/API.md) | Code / API reference for all classes and methods |
+| [docs/CONFIGURATION.md](docs/CONFIGURATION.md) | All configuration parameters and tuning tips |
 
 ---
 
