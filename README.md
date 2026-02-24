@@ -388,7 +388,7 @@ Rural road scenario demonstrating pothole detection capabilities.
 
 ### 🎬 Demo Video 2 - Highway with Vehicles and Potholes
 
-[▶️ **Click here to watch demo2.mp4**](https://github.com/gayatri719/real-time-road-anomaly-raspberrypi/blob/main/demo2.mp4)
+[▶️ **Click here to watch demo2.mp4**](https://github.com/Vikaash-dev/road-anomaly-detection-ai/blob/main/demo2.mp4)
 
 Highway scenario showing vehicle tracking and pothole detection.
 
@@ -398,7 +398,7 @@ Highway scenario showing vehicle tracking and pothole detection.
 
 ### 🎬 Demo Video 3 - Rural Road with Animals and Vehicles
 
-[▶️ **Click here to watch demo3.mp4**](https://github.com/gayatri719/real-time-road-anomaly-raspberrypi/blob/main/demo3.mp4)
+[▶️ **Click here to watch demo3.mp4**](https://github.com/Vikaash-dev/road-anomaly-detection-ai/blob/main/demo3.mp4)
 
 Complex scenario with animals, vehicles, and road anomalies.
 
@@ -432,11 +432,9 @@ Complex scenario with animals, vehicles, and road anomalies.
 
 
 
-## 👩‍💻 Author
+## 👨‍💻 Author
 
-**Gayatri A**  
-B.Tech Electronics & Communication Engineering  
-Bharat AI SoC Student Challenge
+**Vikaash R** — [@Vikaash-dev](https://github.com/Vikaash-dev)
 
 ---
 
